@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_material')->references('id')->on('materials')->nullable();;
             $table->string('title');
-            $table->string('description');
-            $table->string('file_material');
+            $table->text('description')->nullable();
+            $table->string('file_material')->nullable();
             $table->timestamps();
         });
     }

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_subMaterial')->references('id')->on('sub_materials')->nullable();
+            $table->unsignedBigInteger('id_material')->references('id')->on('materials')->nullable();
             $table->string('question');
             $table->integer('score')->nullable();
             $table->timestamps();
