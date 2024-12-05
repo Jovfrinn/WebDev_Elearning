@@ -7,7 +7,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubMateriController;
 use Illuminate\Support\Facades\Route;
 
-// Route::get('/', [MaterialController::class, 'index'])->name('get.index');
+Route::get('/', [MaterialController::class, 'index'])->name('get.index');
 Route::get('/join/{id}', [MaterialController::class, 'show'])->name('join.class');
 
 Route::get('materi/{id}', [SubMateriController::class, 'index'])->name('sub.materi');
@@ -17,7 +17,6 @@ Route::get('materi/join/{id}', [MaterialUsersController::class, 'index'])->name(
 
 
 
-Route::get('/', [MateriController::class, 'index'])->name('get.index');
 
 
 Route::get('/dashboard', function () {

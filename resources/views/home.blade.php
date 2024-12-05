@@ -32,15 +32,15 @@
 <div class="row mx-auto mt-5">
 
 @if(isset($materialUser))
-@foreach ($materialUser as $item)
-    
+@foreach ($materialUser as $item)  
+
   <div class="col-md-4">
       <div class="card" style="width: 18rem;">
-          <img src="{{asset('assets/img/'.$item->material_image)}}" class="card-img-top" alt="...">
+          <img src="{{asset('assets/img/'.$item['material_image'])}}" class="card-img-top" alt="...">
           <div class="card-body">
-            <h5 class="card-title">{{$item->material_title}}</h5>
-            <p class="card-text">{{$item->description}}</p>
-              <a href="{{route('join.class',$item->id)}}" class="btn btn-primary">Masuk</a>
+            <h5 class="card-title">{{$item['material_title']}}</h5>
+            <p class="card-text">{{$item['description']}}</p>
+              <a href="{{route('join.class',$item['id'])}}" class="btn btn-primary">Masuk</a>
             </div>
         </div>
   </div>

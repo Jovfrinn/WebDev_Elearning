@@ -56,7 +56,6 @@ class MaterialController extends Controller
      */
     public function show(string $id)
     {
-        
         $idUser = Auth::id();
         $idMaterial = $id;
     
