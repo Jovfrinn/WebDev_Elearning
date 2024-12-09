@@ -4,6 +4,7 @@ use App\Http\Controllers\API\frontend\MateriController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\MaterialUsersController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\QuizController;
 use App\Http\Controllers\SubMateriController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,7 +16,13 @@ Route::get('materi/detail/{id}', [SubMateriController::class, 'show'])->name('sh
 
 Route::get('materi/join/{id}', [MaterialUsersController::class, 'index'])->name('materi.join');
 
-
+// Route Quiz
+Route::get('quiz/start/{id}', [QuizController::class, 'startQuiz'])->name('go.quiz');
+Route::get('/quiz/{id}', [QuizController::class, 'show'])->name('quiz.show');
+Route::post('/quiz/{id}/answer', [QuizController::class, 'storeAnswer'])->name('quiz.store');
+Route::get('/result', [QuizController::class, 'index'])->name('quiz.result');
+Route::get('/result/{id}', [QuizController::class, 'resultQuiz'])->name('quiz.results');
+Route::get('/quiz/previous/{id}', [QuizController::class, 'previousQuestion'])->name('quiz.previous');
 
 
 

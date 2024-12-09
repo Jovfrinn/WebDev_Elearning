@@ -64,6 +64,10 @@ class MaterialController extends Controller
         ->where('id_material', $idMaterial)
         ->first();
 
+
+
+
+
         if ($materi) {
         return redirect()->route('sub.materi', $idMaterial);
         }

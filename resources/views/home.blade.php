@@ -9,7 +9,6 @@
   <body>
     <div class="row mx-auto mt-5">
         @foreach ($material as $materi)
-        {{-- @dd($materi) --}}
         <div class="col-md-4">
             <div class="card" style="width: 18rem;">
                 <img src="{{asset('assets/img/'.$materi['material_image'])}}" class="card-img-top" alt="...">

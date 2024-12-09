@@ -11,7 +11,7 @@ class MaterialUsersController extends Controller
      */
     public function index()
     {
-        
+    
     }
 
     /**

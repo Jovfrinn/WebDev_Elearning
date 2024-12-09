@@ -11,4 +11,9 @@ class Question extends Model
         'question',
         'score',
     ];
+    
+    public function answers()
+    {
+        return $this->hasMany(Answer::class, 'id_question');
+    }
 }
