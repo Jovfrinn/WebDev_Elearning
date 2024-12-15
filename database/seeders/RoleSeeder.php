@@ -17,6 +17,12 @@ class RoleSeeder extends Seeder
             [
                 "role" => "user",
             ],
+            [
+                "role" => "teacher",
+            ],
+            [
+                "role" => "admin",
+            ],
         ];
 
         DB::table('roles')->insert($array);

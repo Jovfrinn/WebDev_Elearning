@@ -25,16 +25,18 @@ class SubMateriController extends Controller
         $materi = Material::findOrFail($idMateri);
         $data['materi'] = $materi;
 
+        if(isset($idUser)){
         $resulstQuiz = ResultQuiz::where('id_material', $idMateri)->where('id_user', $idUser->id)->first();
+        }
 
-        // if(!$resulstQuiz){
         $id_question = Question::where('id_material', $idMateri)->pluck('id')->first();
+        if($id_question){
         $data['question'] = $id_question;
-        // }
+        }
 
 
 
-        return view('materi', $data);
+        return view('user.materi', $data);
     }
 
     /**
@@ -63,7 +65,7 @@ class SubMateriController extends Controller
 
         $data['detailMateri'] = $detailMateri;
 
-        return view('detailMateri',$data);
+        return view('user.detailMateri',$data);
     }
 
     /**

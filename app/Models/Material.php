@@ -19,5 +19,10 @@ class Material extends Model
             ->withTimestamps()
                 ->withPivot('joined_at');
     }
+
+    public function userTeacher()
+    {
+        return $this->belongsTo(User::class, 'id_teacher');
+    }
     
 }

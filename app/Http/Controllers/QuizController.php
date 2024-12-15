@@ -60,7 +60,7 @@ class QuizController extends Controller
         session()->forget('quiz.answers');
         session()->forget('idMaterial');
     
-        return view('result', $data);
+        return view('user.result', $data);
     }
     
     public function startQuiz($idQuestion)
@@ -123,7 +123,7 @@ class QuizController extends Controller
             return redirect()->route('quiz.result');
         }
         
-        return view('quiz', [
+        return view('user.quiz', [
             'question' => $question,
             'currentQuestion' => $currentIndex + 1,
             'totalQuestions' => count($questions),
@@ -171,20 +171,21 @@ class QuizController extends Controller
 
     public function resultQuiz($id){
         $result = resultQuiz::findOrFail($id);
+        $idMaterial = $result->id_material;
         $totalQuestions = $result->totalQuestion;
         $correctAnswers = $result->correctAnswers;
-        $score = $result->score;
         $answers = $result->resultAnswers;
         $id_answer = [];
         
         foreach($answers as $answer){
-            $id_answer[] =$answer['id'];
+            $id_answer[] = $answer['id'];
         }
         $answerData = Answer::whereIn('id', $id_answer)->with('question')->get();
         $data['answerData'] = $answerData;
         $data['totalQuestions'] = $totalQuestions;
         $data['correctAnswers'] = $correctAnswers;
-        return view('result', $data);
+        $data['idMaterial'] = $idMaterial;
+        return view('user.result', $data);
     }
     
 }

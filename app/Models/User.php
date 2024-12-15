@@ -23,7 +23,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'id_role'
+        'id_role',
+        'is_verified',
+        'nip',
+        'image_profile'
     ];
 
     /**
@@ -54,6 +57,11 @@ class User extends Authenticatable
     return $this->belongsToMany(MaterialUser::class, 'material_users')
                 ->withTimestamps()
                 ->withPivot('joined_at');
+}
+
+public function material()
+{
+    return $this->hasMany(Material::class, 'id_teacher');
 }
 
 

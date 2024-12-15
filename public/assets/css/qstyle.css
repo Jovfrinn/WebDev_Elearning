@@ -94,6 +94,13 @@
     width: 140px;
 }
 
+.prev-btn:hover,
+.next-btn:hover {
+    background-color: #fff;
+    border: 1px solid #064469;
+    color: #064469;
+}
+
 /* QUIZ RESULT */
 .results-card {
     background-color: #3498db;

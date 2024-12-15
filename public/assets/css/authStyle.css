@@ -1,0 +1,129 @@
+/* * {
+    border: 1px solid red;
+} */
+/* Kontainer yang mengatur posisi */
+.background-container {
+    position: relative;
+    width: 100%;
+    height: 100vh; /* Atur tinggi sesuai kebutuhan */
+}
+
+/* Background dengan filter */
+.background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url("../img/ukm.jpg") no-repeat center center; /* Ganti dengan gambar latar belakang */
+    background-size: cover;
+    filter: blur(3px); /* Misalnya, memberi blur pada background */
+    z-index: -1; /* Agar background berada di belakang konten */
+}
+
+/* Konten seperti <h1>, <p>, dll. */
+.content {
+    position: relative;
+    z-index: 1; /* Konten berada di depan background */
+    color: white; /* Warna teks */
+    text-align: center;
+    height: 100%;
+    padding: 20px;
+}
+
+.content-login {
+    width: 40rem;
+    height: 30rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+    overflow: hidden;
+    background-color: #f0f0f0;
+    box-shadow: 0px 0px 11px 0px rgba(0, 0, 0, 0.75);
+    -webkit-box-shadow: 0px 0px 11px 0px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0px 0px 11px 0px rgba(0, 0, 0, 0.75);
+}
+
+.content-login .img {
+    width: 20rem;
+    height: 30rem;
+    display: flex;
+    justify-content: start;
+    overflow: hidden;
+}
+
+.content-login .title-login {
+    font-weight: 700;
+    font-size: 25px;
+}
+
+.content-login .form-login {
+    width: 20rem;
+    height: 25rem;
+    color: #000;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.form-login .input-email,
+.form-login .input-password {
+    border-radius: 25px !important;
+    width: 290px !important;
+    margin: 5px 0;
+    border: 1px solid #2f4156 !important;
+}
+
+.form-login button {
+    background-color: #064469;
+    color: #ffff;
+    width: 290px;
+    font-family: "Inria Sans", sans-serif;
+    font-weight: 600;
+    border-radius: 12px;
+    margin: 5px 0;
+}
+
+.form-login button:hover {
+    background-color: #fff;
+    border: 1px solid #064469;
+    color: #064469;
+}
+
+.content-login .hr {
+    width: 220px;
+    height: 1.5px;
+    background-color: #000;
+    margin: 15px 0;
+}
+
+.btn-google {
+    width: 45px;
+    height: 45px;
+    border-radius: 50% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    border: 1px solid black !important;
+}
+
+.signUp {
+    margin: 10px;
+}
+
+.signUp a {
+    color: red;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.hidden {
+    display: none;
+}
+
+@media screen and (max-width: 600px) {
+    .content-login .img {
+        display: none;
+    }
+}

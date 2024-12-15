@@ -26,14 +26,24 @@ class MaterialController extends Controller
 
         $idMateri = MaterialUser::where('id_user', $userId)->pluck('id_material');
 
-        $materialUser = Material::whereIn('id', $idMateri)->get();
-
+        $materialUser = Material::whereIn('id', $idMateri)->with('userTeacher')->get();
         $data["materialUser"] = $materialUser;
 
         }
 
-        return view('home', $data);
+        return view('user.home', $data);
     }
+ 
+    public function allMateri()
+    {
+        $materi = Material::all();
+
+        $data["material"] = $materi;
+
+        return view('user.allMateri', $data);
+    }
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -63,9 +73,6 @@ class MaterialController extends Controller
         ->where('id_user', $idUser)
         ->where('id_material', $idMaterial)
         ->first();
-
-
-
 
 
         if ($materi) {

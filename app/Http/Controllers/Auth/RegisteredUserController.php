@@ -21,6 +21,11 @@ class RegisteredUserController extends Controller
     {
         return view('auth.register');
     }
+    
+    public function createTeacher(): View
+    {
+        return view('auth.registerTeacher');
+    }
 
     /**
      * Handle an incoming registration request.
@@ -46,6 +51,29 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect(route('get.index', absolute: false));
+    }
+
+    public function storeTeacher(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'id_role' => 2,
+            'nip' => $request->nip
+        ]);
+        logger($user->toArray());
+        event(new Registered($user));
+
+        Auth::login($user);
+
+        return redirect(route('teacher.home', absolute: false));
     }
 }
