@@ -63,9 +63,17 @@ class SubMateriController extends Controller
     {
         $detailMateri = SubMaterial::findOrFail($id);
 
-        $data['detailMateri'] = $detailMateri;
+        $log = \App\Models\LearningLog::create([
+            'id_user'         => auth()->id(),
+            'id_sub_material' => $detailMateri->id,
+            'id_material'     => $detailMateri->id_material,
+            'started_at'      => now(),
+        ]);
 
-        return view('user.detailMateri',$data);
+        return view('user.detailMateri', [
+            'detailMateri' => $detailMateri,
+            'logId'        => $log->id,
+        ]);
     }
 
     /**
