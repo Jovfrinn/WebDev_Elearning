@@ -86,6 +86,10 @@ Route::middleware(['auth','cekRole:2'])->group(function(){
     Route::get('/teacher/add/quiz/{id}', [TeacherQuizController::class, 'index'])->name('add.quiz');
     Route::post('/teacher/add/quiz', [TeacherQuizController::class, 'store'])->name('store.quiz');
 
+    // Teacher analytics
+    Route::get('/teacher/analytics/{id}', [App\Http\Controllers\Teacher\AnalyticsController::class, 'show'])->name('teacher.analytics');
+    Route::get('/teacher/analytics/{id_material}/student/{id_student}', [App\Http\Controllers\Teacher\AnalyticsController::class, 'studentDetail'])->name('teacher.analytics.student');
+
 });
 
 require __DIR__.'/auth.php';
