@@ -12,7 +12,11 @@ use App\Http\Controllers\Teacher\TeacherController;
 use App\Http\Controllers\UpdateProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [MaterialController::class, 'index'])->name('get.index');
+Route::get('/', function () {
+    return view('welcome');
+})->name('landing');
+
+Route::get('/home', [MaterialController::class, 'index'])->name('get.index');
 Route::get('/all/materi', [MaterialController::class, 'allMateri'])->name('all.materi');
 
 
@@ -35,6 +39,10 @@ Route::post('/quiz/{id}/answer', [QuizController::class, 'storeAnswer'])->name('
 Route::get('/result', [QuizController::class, 'index'])->name('quiz.result');
 Route::get('/result/{id}', [QuizController::class, 'resultQuiz'])->name('quiz.results');
 Route::get('/quiz/previous/{id}', [QuizController::class, 'previousQuestion'])->name('quiz.previous');
+
+// Learning log tracking
+Route::post('/learning-log/start', [App\Http\Controllers\LearningLogController::class, 'start'])->name('log.start');
+Route::post('/learning-log/end', [App\Http\Controllers\LearningLogController::class, 'end'])->name('log.end');
 });
 
 // admin
@@ -49,6 +57,10 @@ Route::middleware(['auth','cekRole:3'])->group(function(){
     Route::get('/admin/verifikasi/teacher', [AdminController::class, 'getTeacher'])->name('get.teacher');
     Route::get('/admin/verifikasi/teacher/{id}', [AdminController::class, 'verifikasi'])->name('verifikasi.teacher');
     Route::get('/admin/delete/teacher/{id}', [AdminController::class, 'deleteTeacher'])->name('delete.teacher');
+
+    // create teacher account
+    Route::get('/admin/teacher/create', [AdminController::class, 'createTeacher'])->name('create.teacher');
+    Route::post('/admin/teacher/store', [AdminController::class, 'storeTeacher'])->name('store.teacher');
 });
 
 // Teacher
