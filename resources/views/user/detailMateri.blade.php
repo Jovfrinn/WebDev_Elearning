@@ -104,12 +104,16 @@
 </div>
 @endsection
 
+@if($logId)
 @section('script')
 <script>
     const _logId     = {{ $logId }};
     const _csrfToken = '{{ csrf_token() }}';
 
+    let beaconSent = false;
     function sendEndBeacon() {
+        if (beaconSent) return;
+        beaconSent = true;
         const data = new FormData();
         data.append('log_id', _logId);
         data.append('_token', _csrfToken);
@@ -120,3 +124,4 @@
     window.addEventListener('pagehide', sendEndBeacon);
 </script>
 @endsection
+@endif

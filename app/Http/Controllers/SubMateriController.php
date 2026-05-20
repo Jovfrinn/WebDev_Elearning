@@ -63,16 +63,22 @@ class SubMateriController extends Controller
     {
         $detailMateri = SubMaterial::findOrFail($id);
 
-        $log = \App\Models\LearningLog::create([
-            'id_user'         => auth()->id(),
-            'id_sub_material' => $detailMateri->id,
-            'id_material'     => $detailMateri->id_material,
-            'started_at'      => now(),
-        ]);
+        $logId = null;
+        try {
+            $log   = \App\Models\LearningLog::create([
+                'id_user'         => auth()->id(),
+                'id_sub_material' => $detailMateri->id,
+                'id_material'     => $detailMateri->id_material,
+                'started_at'      => now(),
+            ]);
+            $logId = $log->id;
+        } catch (\Throwable $e) {
+            // Tracking failure must not block the student from viewing content
+        }
 
         return view('user.detailMateri', [
             'detailMateri' => $detailMateri,
-            'logId'        => $log->id,
+            'logId'        => $logId,
         ]);
     }
 
