@@ -73,3 +73,37 @@ test('unauthenticated user cannot start a log', function () {
     ]);
     $response->assertStatus(401);
 });
+
+test('student cannot end another student log', function () {
+    $studentA = User::factory()->create(['id_role' => 1]);
+    $studentB = User::factory()->create(['id_role' => 1]);
+    $teacher  = User::factory()->create(['id_role' => 2]);
+    $material = Material::create([
+        'material_title' => 'Test',
+        'material_image' => null,
+        'description'    => 'D',
+        'id_teacher'     => $teacher->id,
+    ]);
+    $sub = SubMaterial::create([
+        'id_material'   => $material->id,
+        'title'         => 'S',
+        'description'   => 'D',
+        'file_material' => null,
+        'file_pdf'      => null,
+    ]);
+
+    $log = LearningLog::create([
+        'id_user'         => $studentA->id,
+        'id_sub_material' => $sub->id,
+        'id_material'     => $material->id,
+        'started_at'      => now()->subMinutes(2),
+    ]);
+
+    // Student B tries to end Student A's log
+    $response = $this->actingAs($studentB)->postJson('/learning-log/end', [
+        'log_id' => $log->id,
+    ]);
+
+    $response->assertStatus(404);
+    expect($log->fresh()->ended_at)->toBeNull();
+});

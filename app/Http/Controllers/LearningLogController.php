@@ -5,14 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\LearningLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class LearningLogController extends Controller
 {
     public function start(Request $request)
     {
         $request->validate([
-            'id_sub_material' => 'required|exists:sub_materials,id',
-            'id_material'     => 'required|exists:materials,id',
+            'id_sub_material' => [
+                'required',
+                Rule::exists('sub_materials', 'id')->where('id_material', $request->id_material),
+            ],
+            'id_material' => 'required|exists:materials,id',
         ]);
 
         $log = LearningLog::create([
