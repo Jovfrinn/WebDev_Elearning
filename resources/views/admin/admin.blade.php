@@ -1,97 +1,147 @@
 @extends('admin.layouts.headers')
 
+@section('pageTitle', 'Ringkasan Sistem')
+
 @section('teacherContent')
-<div class="container">
-  <div class="header-main">
-    <span>Selamat datang, Di halaman utama Guru</span>
-    <span class="vortex">EduVortex</span>
-    <hr />
-  </div>
-  <div class="row mt-5">
-    <div class="col-md-4 all-card pb-5">
-      <div class="card-info">
-        <div class="logo-card-info">
-          <i class="bi bi-people-fill"></i>
+    <!-- Header Section -->
+    <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h2 class="text-2xl font-bold text-slate-800 tracking-tight">Selamat Datang, Admin</h2>
+            <p class="text-sm text-slate-500 mt-1">Berikut adalah ringkasan data di platform EduVortex hari ini.</p>
         </div>
-        <h4>{{$student}} Peserta</h4>
-        <a href="{{route('get.student')}}">lihat detail</a>
-      </div>
     </div>
-    <div class="col-md-4 all-card pb-5">
-      <div class="card-info">
-        <div class="logo-card-info">
-          <i class="bi bi-journal-text"></i>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+        <!-- Student Card -->
+        <div class="bg-white rounded-2xl p-6 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-slate-100 flex items-center justify-between group hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
+            <div>
+                <p class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-1">Total Peserta</p>
+                <h3 class="text-4xl font-bold text-slate-800">{{ $student }}</h3>
+                <a href="{{ route('get.student') }}" class="inline-flex items-center mt-3 text-sm font-medium text-rose-600 hover:text-rose-700 transition-colors">
+                    Lihat detail
+                    <span class="material-symbols-outlined text-sm ml-1 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                </a>
+            </div>
+            <div class="h-16 w-16 rounded-full bg-rose-50 flex items-center justify-center text-rose-600 group-hover:bg-rose-600 group-hover:text-white transition-colors duration-300">
+                <span class="material-symbols-outlined text-3xl">people</span>
+            </div>
         </div>
-        <h4>{{$material}} Materi</h4>
-        <a href="{{route('get.materi')}}">lihat detail</a>
-      </div>
+
+        <!-- Material Card -->
+        <div class="bg-white rounded-2xl p-6 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-slate-100 flex items-center justify-between group hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
+            <div>
+                <p class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-1">Total Materi</p>
+                <h3 class="text-4xl font-bold text-slate-800">{{ $material }}</h3>
+                <a href="{{ route('get.materi') }}" class="inline-flex items-center mt-3 text-sm font-medium text-rose-600 hover:text-rose-700 transition-colors">
+                    Lihat detail
+                    <span class="material-symbols-outlined text-sm ml-1 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                </a>
+            </div>
+            <div class="h-16 w-16 rounded-full bg-rose-50 flex items-center justify-center text-rose-600 group-hover:bg-rose-600 group-hover:text-white transition-colors duration-300">
+                <span class="material-symbols-outlined text-3xl">book</span>
+            </div>
+        </div>
+
+        <!-- Teacher Card -->
+        <div class="bg-white rounded-2xl p-6 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-slate-100 flex items-center justify-between group hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
+            <div>
+                <p class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-1">Total Pengajar</p>
+                <h3 class="text-4xl font-bold text-slate-800">{{ $teacher }}</h3>
+                <a href="{{ route('get.teachers') }}" class="inline-flex items-center mt-3 text-sm font-medium text-rose-600 hover:text-rose-700 transition-colors">
+                    Lihat detail
+                    <span class="material-symbols-outlined text-sm ml-1 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                </a>
+            </div>
+            <div class="h-16 w-16 rounded-full bg-rose-50 flex items-center justify-center text-rose-600 group-hover:bg-rose-600 group-hover:text-white transition-colors duration-300">
+                <span class="material-symbols-outlined text-3xl">school</span>
+            </div>
+        </div>
     </div>
-    <div class="col-md-4 all-card pb-5">
-      <div class="card-info">
-        <div class="logo-card-info">
-          <i class="bi bi-person-workspace"></i>
-        </div>
-        <h4>{{$teacher}} Pengajar</h4>
-        <a href="{{route('get.teachers')}}">lihat detail</a>
-      </div>
+
+    {{-- Period Filter --}}
+    <div class="mt-8 flex items-center gap-3">
+        <span class="text-sm font-medium text-slate-600">Periode:</span>
+        @foreach([7 => '7 Hari', 30 => '30 Hari', 90 => '3 Bulan', 0 => 'Semua'] as $d => $label)
+        <a href="{{ route('admin', ['period' => $d]) }}"
+           class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {{ $days == $d ? 'bg-rose-600 text-white' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50' }}">
+            {{ $label }}
+        </a>
+        @endforeach
     </div>
-    {{-- <div class="col-md-12 all-card pb-5">
-      <div class="card-info-large">
-        <div class="logo-card-info-large">
-          <i class="bi bi-people-fill"></i>
+
+    {{-- Activity Cards --}}
+    @php $fmtA = function($s) {
+        $s = (int)$s;
+        if ($s < 60) return $s . ' dtk';
+        if ($s < 3600) return round($s / 60) . ' mnt';
+        return number_format($s / 3600, 1) . ' jam';
+    }; @endphp
+    <div class="mt-4 grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)]">
+            <p class="text-xs text-slate-500 uppercase tracking-wide mb-1">Siswa Aktif</p>
+            <p class="text-3xl font-bold text-slate-800">{{ $activeStudents }}</p>
         </div>
-        <h4>100 Peserta</h4>
-        <a href="">lihat detail</a>
-      </div>
-    </div> --}}
-  </div>
-</div>
+        <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)]">
+            <p class="text-xs text-slate-500 uppercase tracking-wide mb-1">Total Waktu Belajar</p>
+            <p class="text-3xl font-bold text-indigo-600">{{ $fmtA($totalStudyTime) }}</p>
+        </div>
+        <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)]">
+            <p class="text-xs text-slate-500 uppercase tracking-wide mb-1">Quiz Dikerjakan</p>
+            <p class="text-3xl font-bold text-emerald-600">{{ $totalQuizzes }}</p>
+        </div>
+        <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)]">
+            <p class="text-xs text-slate-500 uppercase tracking-wide mb-1">Rata Skor Quiz</p>
+            <p class="text-3xl font-bold text-amber-500">{{ $avgPlatformScore }}</p>
+        </div>
+    </div>
+
+    {{-- Top Materials & Top Students --}}
+    <div class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] overflow-hidden">
+            <div class="p-5 border-b border-slate-100">
+                <h3 class="font-bold text-slate-700">Materi Paling Aktif</h3>
+            </div>
+            @if($topMaterials->isEmpty())
+            <div class="p-6 text-center text-slate-400 text-sm">Belum ada data.</div>
+            @else
+            <ul class="divide-y divide-slate-100">
+                @foreach($topMaterials as $mat)
+                <li class="px-5 py-3 flex items-center justify-between gap-3">
+                    <div class="flex-1 min-w-0">
+                        <p class="font-medium text-slate-800 truncate">{{ $mat->material_title }}</p>
+                        <p class="text-xs text-slate-500">{{ $mat->userTeacher?->name ?? '—' }} · {{ $mat->student_count }} siswa</p>
+                    </div>
+                    <div class="text-right shrink-0">
+                        <p class="text-sm font-semibold text-indigo-600">{{ $mat->access_count }} akses</p>
+                        <p class="text-xs text-slate-400">skor rata {{ $mat->avg_score }}</p>
+                    </div>
+                </li>
+                @endforeach
+            </ul>
+            @endif
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] overflow-hidden">
+            <div class="p-5 border-b border-slate-100">
+                <h3 class="font-bold text-slate-700">Siswa Paling Aktif</h3>
+            </div>
+            @if($topStudents->isEmpty())
+            <div class="p-6 text-center text-slate-400 text-sm">Belum ada data.</div>
+            @else
+            <ul class="divide-y divide-slate-100">
+                @foreach($topStudents as $s)
+                <li class="px-5 py-3 flex items-center justify-between gap-3">
+                    <div class="flex-1 min-w-0">
+                        <p class="font-medium text-slate-800 truncate">{{ $s->name }}</p>
+                        <p class="text-xs text-slate-500">{{ $s->class_count }} kelas · rata skor {{ $s->avg_score }}</p>
+                    </div>
+                    <p class="text-sm font-semibold text-emerald-600 shrink-0">{{ $fmtA($s->total_duration) }}</p>
+                </li>
+                @endforeach
+            </ul>
+            @endif
+        </div>
+    </div>
+
 @endsection
-
-
-
-
-{{-- <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  </head>
-  <body>
- 
-    <div class="row mx-auto">
-        <div class="card col-md-4 mx-auto" style="width: 18rem;">
-            <div class="card-body">
-              <h5 class="card-title">{{$student}}</h5>
-              <h6 class="card-subtitle mb-2 text-body-secondary">Peserta</h6>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-              <a href="#" class="card-link">Card link</a>
-              <a href="#" class="card-link">Another link</a>
-            </div>
-          </div>
-        <div class="card col-md-4 mx-auto" style="width: 18rem;">
-            <div class="card-body">
-              <h5 class="card-title">{{$material}}</h5>
-              <h6 class="card-subtitle mb-2 text-body-secondary">Materi</h6>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-              <a href="#" class="card-link">Card link</a>
-              <a href="#" class="card-link">Another link</a>
-            </div>
-          </div>
-        <div class="card col-md-4 mx-auto" style="width: 18rem;">
-            <div class="card-body">
-              <h5 class="card-title">{{$teacher}}</h5>
-              <h6 class="card-subtitle mb-2 text-body-secondary">Pengajar</h6>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-              <a href="#" class="card-link">Card link</a>
-              <a href="#" class="card-link">Another link</a>
-            </div>
-          </div>
-    </div>
-
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-  </body>
-</html> --}}

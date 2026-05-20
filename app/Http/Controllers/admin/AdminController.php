@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Material;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -14,15 +15,49 @@ class AdminController extends Controller
      */
     public function index()
     {
-        $teacher = count(User::where('id_role',2)->where('is_verified', true)->get());
-        $material = count(Material::all());
-        $student = count(User::where('id_role',1)->get());
+        $teacher  = User::where('id_role', 2)->where('is_verified', true)->count();
+        $material = Material::count();
+        $student  = User::where('id_role', 1)->count();
 
-        $data['teacher'] = $teacher;
-        $data['material'] = $material;
-        $data['student'] = $student;
+        $days  = max(0, (int) request('period', 30));
+        $since = $days > 0 ? now()->subDays($days) : null;
 
-        return view('admin.admin', $data);
+        $logsQuery = \App\Models\LearningLog::query();
+        $quizQuery = \App\Models\ResultQuiz::query();
+
+        if ($since) {
+            $logsQuery->where('started_at', '>=', $since);
+            $quizQuery->where('created_at', '>=', $since);
+        }
+
+        $activeStudents   = (clone $logsQuery)->distinct('id_user')->count('id_user');
+        $totalStudyTime   = (int) (clone $logsQuery)->sum('duration');
+        $totalQuizzes     = (clone $quizQuery)->count();
+        $avgPlatformScore = round((clone $quizQuery)->avg('score') ?? 0, 1);
+
+        $topMaterials = Material::with('userTeacher')
+            ->withCount('users as student_count')
+            ->get()
+            ->map(function ($mat) use ($logsQuery, $quizQuery) {
+                $mat->access_count = (clone $logsQuery)->where('id_material', $mat->id)->count();
+                $mat->avg_score    = round((clone $quizQuery)->where('id_material', $mat->id)->avg('score') ?? 0, 1);
+                return $mat;
+            })
+            ->sortByDesc('access_count')
+            ->take(5);
+
+        $topStudents = User::where('id_role', 1)->get()->map(function ($s) use ($logsQuery, $quizQuery) {
+            $s->total_duration = (int) (clone $logsQuery)->where('id_user', $s->id)->sum('duration');
+            $s->class_count    = \App\Models\MaterialUser::where('id_user', $s->id)->count();
+            $s->avg_score      = round((clone $quizQuery)->where('id_user', $s->id)->avg('score') ?? 0, 1);
+            return $s;
+        })->sortByDesc('total_duration')->take(5);
+
+        return view('admin.admin', compact(
+            'teacher', 'material', 'student',
+            'days', 'activeStudents', 'totalStudyTime', 'totalQuizzes', 'avgPlatformScore',
+            'topMaterials', 'topStudents'
+        ));
     }
 
     public function getTeacher(){
@@ -76,6 +111,49 @@ class AdminController extends Controller
         $data['materials'] = $materials;
         return view('admin.material',$data);
     }
+    /**
+     * Show form to create a new teacher account (by admin).
+     */
+    public function createTeacher()
+    {
+        return view('admin.createTeacher');
+    }
+
+    /**
+     * Store a newly created teacher account.
+     */
+    public function storeTeacher(Request $request)
+    {
+        $request->validate([
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:users,email',
+            'nip'      => 'required|string|max:50|unique:users,nip',
+            'password' => 'required|string|min:8|confirmed',
+        ], [
+            'name.required'      => 'Nama wajib diisi.',
+            'email.required'     => 'Email wajib diisi.',
+            'email.email'        => 'Format email tidak valid.',
+            'email.unique'       => 'Email sudah digunakan oleh akun lain.',
+            'nip.required'       => 'NIP wajib diisi.',
+            'nip.unique'         => 'NIP sudah digunakan oleh akun lain.',
+            'password.required'  => 'Password wajib diisi.',
+            'password.min'       => 'Password minimal 8 karakter.',
+            'password.confirmed' => 'Konfirmasi password tidak cocok.',
+        ]);
+
+        User::create([
+            'name'        => $request->name,
+            'email'       => $request->email,
+            'nip'         => $request->nip,
+            'password'    => Hash::make($request->password),
+            'id_role'     => 2,       // role guru
+            'is_verified' => false,   // belum diverifikasi, harus login dulu lalu admin verify
+        ]);
+
+        return redirect()->route('get.teachers')
+            ->with('success', 'Akun guru berhasil dibuat! Guru dapat login dan menunggu verifikasi.');
+    }
+
     /**
      * Show the form for creating a new resource.
      */
