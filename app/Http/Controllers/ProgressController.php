@@ -17,19 +17,31 @@ class ProgressController extends Controller
         $materialIds = MaterialUser::where('id_user', $userId)->pluck('id_material');
         $materials   = Material::whereIn('id', $materialIds)->get();
 
-        $progressData = $materials->map(function ($material) use ($userId) {
-            $totalSubs  = SubMaterial::where('id_material', $material->id)->count();
-            $openedSubs = LearningLog::where('id_user', $userId)
-                ->where('id_material', $material->id)
-                ->distinct('id_sub_material')
-                ->count('id_sub_material');
-            $totalDuration = (int) LearningLog::where('id_user', $userId)
-                ->where('id_material', $material->id)
-                ->sum('duration');
-            $quiz       = ResultQuiz::where('id_user', $userId)
-                ->where('id_material', $material->id)
-                ->first();
-            $percentage = $totalSubs > 0 ? round(($openedSubs / $totalSubs) * 100) : 0;
+        // Bulk aggregation — 2 queries instead of 4N
+        $logStats = LearningLog::where('id_user', $userId)
+            ->whereIn('id_material', $materialIds)
+            ->selectRaw('id_material, SUM(duration) as total_duration, COUNT(DISTINCT id_sub_material) as opened_count')
+            ->groupBy('id_material')
+            ->get()
+            ->keyBy('id_material');
+
+        $subCounts = SubMaterial::whereIn('id_material', $materialIds)
+            ->selectRaw('id_material, COUNT(*) as total')
+            ->groupBy('id_material')
+            ->get()
+            ->keyBy('id_material');
+
+        $quizResults = ResultQuiz::where('id_user', $userId)
+            ->whereIn('id_material', $materialIds)
+            ->get()
+            ->keyBy('id_material');
+
+        $progressData = $materials->map(function ($material) use ($logStats, $subCounts, $quizResults) {
+            $totalSubs     = $subCounts->get($material->id)?->total ?? 0;
+            $openedSubs    = $logStats->get($material->id)?->opened_count ?? 0;
+            $totalDuration = (int) ($logStats->get($material->id)?->total_duration ?? 0);
+            $quiz          = $quizResults->get($material->id);
+            $percentage    = $totalSubs > 0 ? round(($openedSubs / $totalSubs) * 100) : 0;
 
             return compact('material', 'totalSubs', 'openedSubs', 'percentage', 'totalDuration', 'quiz');
         });
@@ -47,21 +59,30 @@ class ProgressController extends Controller
 
     public function show($id)
     {
-        $userId   = Auth::id();
-        $material = Material::findOrFail($id);
+        $userId = Auth::id();
 
+        // Check enrollment BEFORE loading the material (prevents info disclosure)
         if (! MaterialUser::where('id_user', $userId)->where('id_material', $id)->exists()) {
             abort(403, 'Anda belum bergabung ke kelas ini.');
         }
 
+        $material     = Material::findOrFail($id);
         $subMaterials = SubMaterial::where('id_material', $id)->get();
         $quiz         = ResultQuiz::where('id_user', $userId)->where('id_material', $id)->first();
 
-        $subProgress = $subMaterials->map(function ($sub) use ($userId) {
-            $logs          = LearningLog::where('id_user', $userId)->where('id_sub_material', $sub->id)->get();
+        // Bulk fetch all logs for this material — 1 query instead of N
+        $allLogs = LearningLog::where('id_user', $userId)
+            ->where('id_material', $id)
+            ->get()
+            ->groupBy('id_sub_material');
+
+        $subProgress = $subMaterials->map(function ($sub) use ($allLogs) {
+            $logs          = $allLogs->get($sub->id, collect());
+            $hasLogs       = $logs->isNotEmpty();
             $totalDuration = (int) $logs->sum('duration');
-            $lastAccessed  = $logs->max('started_at');
-            return compact('sub', 'logs', 'totalDuration', 'lastAccessed');
+            $openCount     = $logs->count();
+            $lastAccessed  = $hasLogs ? $logs->max('started_at') : null;
+            return compact('sub', 'hasLogs', 'totalDuration', 'openCount', 'lastAccessed');
         });
 
         return view('user.progressDetail', compact('material', 'subProgress', 'quiz'));

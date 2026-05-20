@@ -3,14 +3,12 @@
 @section('pageTitle', 'Progress Belajar Saya')
 
 @section('mainContent')
-@php
-function fmtDur($s) {
+@php $fmtDur = function($s) {
     $s = (int)$s;
-    if ($s < 60) return $s . ' dtk';
-    if ($s < 3600) return round($s / 60) . ' mnt';
+    if ($s < 60) return $s . ' detik';
+    if ($s < 3600) return round($s / 60) . ' menit';
     return number_format($s / 3600, 1) . ' jam';
-}
-@endphp
+}; @endphp
 <div class="max-w-5xl mx-auto space-y-6">
 
     {{-- Summary Cards --}}
@@ -30,7 +28,7 @@ function fmtDur($s) {
             </div>
             <div>
                 <p class="text-xs text-slate-500 font-medium uppercase tracking-wide">Total Waktu Belajar</p>
-                <p class="text-3xl font-bold text-slate-800">{{ fmtDur($totalDuration) }}</p>
+                <p class="text-3xl font-bold text-slate-800">{{ $fmtDur($totalDuration) }}</p>
             </div>
         </div>
         <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] flex items-center gap-4">
@@ -76,7 +74,7 @@ function fmtDur($s) {
                         </span>
                         <span class="flex items-center gap-1">
                             <span class="material-symbols-outlined text-[14px]">schedule</span>
-                            {{ fmtDur($item['totalDuration']) }}
+                            {{ $fmtDur($item['totalDuration']) }}
                         </span>
                         @if($item['quiz'])
                         <span class="flex items-center gap-1 text-emerald-600 font-medium">

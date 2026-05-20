@@ -3,14 +3,12 @@
 @section('pageTitle', 'Detail Progress — ' . $material->material_title)
 
 @section('mainContent')
-@php
-function fmtDurD($s) {
+@php $fmtDur = function($s) {
     $s = (int)$s;
     if ($s < 60) return $s . ' detik';
     if ($s < 3600) return round($s / 60) . ' menit';
     return number_format($s / 3600, 1) . ' jam';
-}
-@endphp
+}; @endphp
 <div class="max-w-4xl mx-auto space-y-6">
 
     <div class="flex items-center gap-3 mb-2">
@@ -37,10 +35,10 @@ function fmtDurD($s) {
             <h3 class="font-bold text-slate-700">Daftar Sub-Materi</h3>
         </div>
         <ul class="divide-y divide-slate-100">
-            @foreach($subProgress as $item)
+            @forelse($subProgress as $item)
             <li class="p-5 flex items-start gap-4">
                 <div class="shrink-0 mt-0.5">
-                    @if($item['logs']->isNotEmpty())
+                    @if($item['hasLogs'])
                     <span class="material-symbols-outlined text-emerald-500">check_circle</span>
                     @else
                     <span class="material-symbols-outlined text-slate-300">radio_button_unchecked</span>
@@ -48,11 +46,11 @@ function fmtDurD($s) {
                 </div>
                 <div class="flex-1">
                     <p class="font-semibold text-slate-800">{{ $item['sub']->title }}</p>
-                    @if($item['logs']->isNotEmpty())
+                    @if($item['hasLogs'])
                     <div class="flex flex-wrap gap-x-4 text-xs text-slate-500 mt-1">
                         <span class="flex items-center gap-1">
                             <span class="material-symbols-outlined text-[14px]">schedule</span>
-                            Total: {{ fmtDurD($item['totalDuration']) }}
+                            Total: {{ $fmtDur($item['totalDuration']) }}
                         </span>
                         @if($item['lastAccessed'])
                         <span class="flex items-center gap-1">
@@ -62,7 +60,7 @@ function fmtDurD($s) {
                         @endif
                         <span class="flex items-center gap-1">
                             <span class="material-symbols-outlined text-[14px]">replay</span>
-                            Dibuka {{ $item['logs']->count() }}x
+                            Dibuka {{ $item['openCount'] }}x
                         </span>
                     </div>
                     @else
@@ -70,7 +68,9 @@ function fmtDurD($s) {
                     @endif
                 </div>
             </li>
-            @endforeach
+            @empty
+            <li class="p-10 text-center text-slate-400 text-sm">Belum ada sub-materi di kelas ini.</li>
+            @endforelse
         </ul>
     </div>
 

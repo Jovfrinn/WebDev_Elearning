@@ -44,9 +44,11 @@ Route::get('/quiz/previous/{id}', [QuizController::class, 'previousQuestion'])->
 Route::post('/learning-log/start', [App\Http\Controllers\LearningLogController::class, 'start'])->name('log.start');
 Route::post('/learning-log/end', [App\Http\Controllers\LearningLogController::class, 'end'])->name('log.end');
 
-// Student progress
-Route::get('/progress', [App\Http\Controllers\ProgressController::class, 'index'])->name('progress.index');
-Route::get('/progress/{id}', [App\Http\Controllers\ProgressController::class, 'show'])->name('progress.show');
+// Student progress (role 1 only)
+Route::middleware('cekRole:1')->group(function () {
+    Route::get('/progress', [App\Http\Controllers\ProgressController::class, 'index'])->name('progress.index');
+    Route::get('/progress/{id}', [App\Http\Controllers\ProgressController::class, 'show'])->name('progress.show');
+});
 });
 
 // admin
