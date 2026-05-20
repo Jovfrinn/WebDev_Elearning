@@ -40,14 +40,12 @@ Route::get('/result', [QuizController::class, 'index'])->name('quiz.result');
 Route::get('/result/{id}', [QuizController::class, 'resultQuiz'])->name('quiz.results');
 Route::get('/quiz/previous/{id}', [QuizController::class, 'previousQuestion'])->name('quiz.previous');
 
-// Learning log tracking
-Route::post('/learning-log/start', [App\Http\Controllers\LearningLogController::class, 'start'])->name('log.start');
-Route::post('/learning-log/end', [App\Http\Controllers\LearningLogController::class, 'end'])->name('log.end');
-
-// Student progress (role 1 only)
+// Student-only: progress + activity logging (role 1)
 Route::middleware('cekRole:1')->group(function () {
     Route::get('/progress', [App\Http\Controllers\ProgressController::class, 'index'])->name('progress.index');
     Route::get('/progress/{id}', [App\Http\Controllers\ProgressController::class, 'show'])->name('progress.show');
+    Route::post('/learning-log/start', [App\Http\Controllers\LearningLogController::class, 'start'])->name('log.start');
+    Route::post('/learning-log/end', [App\Http\Controllers\LearningLogController::class, 'end'])->name('log.end');
 });
 });
 

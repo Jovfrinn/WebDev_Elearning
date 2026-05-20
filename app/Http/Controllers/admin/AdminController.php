@@ -35,21 +35,52 @@ class AdminController extends Controller
         $totalQuizzes     = (clone $quizQuery)->count();
         $avgPlatformScore = round((clone $quizQuery)->avg('score') ?? 0, 1);
 
+        // Bulk aggregations for topMaterials
+        $materialAccessCounts = (clone $logsQuery)
+            ->selectRaw('id_material, COUNT(*) as access_count')
+            ->groupBy('id_material')
+            ->get()
+            ->keyBy('id_material');
+
+        $materialQuizScores = (clone $quizQuery)
+            ->selectRaw('id_material, AVG(score) as avg_score')
+            ->groupBy('id_material')
+            ->get()
+            ->keyBy('id_material');
+
         $topMaterials = Material::with('userTeacher')
             ->withCount('users as student_count')
             ->get()
-            ->map(function ($mat) use ($logsQuery, $quizQuery) {
-                $mat->access_count = (clone $logsQuery)->where('id_material', $mat->id)->count();
-                $mat->avg_score    = round((clone $quizQuery)->where('id_material', $mat->id)->avg('score') ?? 0, 1);
+            ->map(function ($mat) use ($materialAccessCounts, $materialQuizScores) {
+                $mat->access_count = $materialAccessCounts->get($mat->id)?->access_count ?? 0;
+                $mat->avg_score    = round($materialQuizScores->get($mat->id)?->avg_score ?? 0, 1);
                 return $mat;
             })
             ->sortByDesc('access_count')
             ->take(5);
 
-        $topStudents = User::where('id_role', 1)->get()->map(function ($s) use ($logsQuery, $quizQuery) {
-            $s->total_duration = (int) (clone $logsQuery)->where('id_user', $s->id)->sum('duration');
-            $s->class_count    = \App\Models\MaterialUser::where('id_user', $s->id)->count();
-            $s->avg_score      = round((clone $quizQuery)->where('id_user', $s->id)->avg('score') ?? 0, 1);
+        // Bulk aggregations for topStudents
+        $studentDurations = (clone $logsQuery)
+            ->selectRaw('id_user, SUM(duration) as total_duration')
+            ->groupBy('id_user')
+            ->get()
+            ->keyBy('id_user');
+
+        $studentQuizScores = (clone $quizQuery)
+            ->selectRaw('id_user, AVG(score) as avg_score')
+            ->groupBy('id_user')
+            ->get()
+            ->keyBy('id_user');
+
+        $studentClassCounts = \App\Models\MaterialUser::selectRaw('id_user, COUNT(*) as class_count')
+            ->groupBy('id_user')
+            ->get()
+            ->keyBy('id_user');
+
+        $topStudents = User::where('id_role', 1)->get()->map(function ($s) use ($studentDurations, $studentQuizScores, $studentClassCounts) {
+            $s->total_duration = (int) ($studentDurations->get($s->id)?->total_duration ?? 0);
+            $s->class_count    = $studentClassCounts->get($s->id)?->class_count ?? 0;
+            $s->avg_score      = round($studentQuizScores->get($s->id)?->avg_score ?? 0, 1);
             return $s;
         })->sortByDesc('total_duration')->take(5);
 
