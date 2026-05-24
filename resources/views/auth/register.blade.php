@@ -1,50 +1,81 @@
 @extends('auth.headerAuth')
 
+@section('title', 'Daftar - EduVortex')
+
 @section('content')
-
-    <div class="background-container">
-        <div class="background"></div>
-        <div class="content d-flex justify-content-center align-items-center">
-         <div class="content-login">
-            <div class="img">
-                <img src="{{asset('assets/img/ukm.jpg')}}" alt="">
-            </div>
-            <div class="form-login">
-                <div class="title-login text-start ms-3">Register</div>
-                <form  method="POST" action="{{ route('register') }}" class="d-flex flex-column align-items-center">
-                    @csrf
-                    <div class="email d-flex flex-column align-items-start">
-                    <label for="name" class="hidden">Nama:</label>
-                    <input type="text" class="input-email form-control" id="name" name="name" placeholder="Nama"  :value="old('name')" required autofocus autocomplete="name" >
-                    <x-input-error :messages="$errors->get('name')" class="mt-2" />
-                    </div>
-                    <div class="password d-flex flex-column align-items-start">
-                    <label for="email" class="hidden">Email:</label>
-                    <input type="email" class="input-password form-control" id="email" name="email" placeholder="Email" :value="old('email')" required autocomplete="username">
-                    <x-input-error :messages="$errors->get('email')" class="mt-2" />    
-                    </div>
-                    <div class="password d-flex flex-column align-items-start">
-                    <label for="password" class="hidden">Password:</label>
-                    <input type="password" class="input-password form-control" id="password" name="password" placeholder="Password"   required autocomplete="new-password">
-                    <x-input-error :messages="$errors->get('password')" class="mt-2" />
-                    </div>
-                    <div class="password d-flex flex-column align-items-start">
-                    <label for="password_confirmation" class="hidden">Confirm Password:</label>
-                    <input type="password" class="input-password form-control" id="password_confirmation" name="password_confirmation" placeholder="Confirm Password"  required autocomplete="new-password">
-                    <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-                    </div>
-                    <button type="submit" class="btn">  {{ __('Register') }}</button>
-                </form>    
-                <div class="hr mx-auto"></div>
-
-                <a href="#" class="btn btn-google mx-auto">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-google" viewBox="0 0 16 16">
-                    <path d="M15.545 6.558a9.4 9.4 0 0 1 .139 1.626c0 2.434-.87 4.492-2.384 5.885h.002C11.978 15.292 10.158 16 8 16A8 8 0 1 1 8 0a7.7 7.7 0 0 1 5.352 2.082l-2.284 2.284A4.35 4.35 0 0 0 8 3.166c-2.087 0-3.86 1.408-4.492 3.304a4.8 4.8 0 0 0 0 3.063h.003c.635 1.893 2.405 3.301 4.492 3.301 1.078 0 2.004-.276 2.722-.764h-.003a3.7 3.7 0 0 0 1.599-2.431H8v-3.08z"/>
-                  </svg>
-                </a>
-                <div class="signUp">Already have account? ? <a href="{{ route('login') }}">Sign In</a></div>
-            </div>
+    <!-- Glassmorphism Card -->
+    <div class="bg-white/80 backdrop-blur-xl border border-white/60 shadow-2xl shadow-indigo-200/50 rounded-3xl p-8 sm:p-10 w-full max-w-md mx-auto">
+        
+        <div class="text-center mb-8">
+            <h2 class="text-2xl font-bold text-slate-800 tracking-tight">Buat Akun Baru</h2>
+            <p class="text-sm text-slate-500 mt-2">Mulai perjalanan belajarmu bersama kami.</p>
         </div>
-        </div>
-      </div>
+
+        <form method="POST" action="{{ route('register') }}" class="space-y-5">
+            @csrf
+            
+            <!-- Name -->
+            <div>
+                <label for="name" class="block text-sm font-medium text-slate-700 mb-1">Nama Lengkap</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <span class="material-symbols-outlined text-slate-400 text-sm">person</span>
+                    </div>
+                    <input type="text" id="name" name="name" :value="old('name')" required autofocus autocomplete="name" 
+                        class="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-xl bg-white/50 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:bg-white transition-colors text-slate-800 placeholder-slate-400" placeholder="John Doe">
+                </div>
+                <x-input-error :messages="$errors->get('name')" class="mt-2 text-sm text-red-600" />
+            </div>
+
+            <!-- Email -->
+            <div>
+                <label for="email" class="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <span class="material-symbols-outlined text-slate-400 text-sm">mail</span>
+                    </div>
+                    <input type="email" id="email" name="email" :value="old('email')" required autocomplete="username" 
+                        class="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-xl bg-white/50 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:bg-white transition-colors text-slate-800 placeholder-slate-400" placeholder="nama@email.com">
+                </div>
+                <x-input-error :messages="$errors->get('email')" class="mt-2 text-sm text-red-600" />
+            </div>
+
+            <!-- Password -->
+            <div>
+                <label for="password" class="block text-sm font-medium text-slate-700 mb-1">Password</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <span class="material-symbols-outlined text-slate-400 text-sm">lock</span>
+                    </div>
+                    <input type="password" id="password" name="password" required autocomplete="new-password" 
+                        class="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-xl bg-white/50 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:bg-white transition-colors text-slate-800 placeholder-slate-400" placeholder="••••••••">
+                </div>
+                <x-input-error :messages="$errors->get('password')" class="mt-2 text-sm text-red-600" />
+            </div>
+
+            <!-- Confirm Password -->
+            <div>
+                <label for="password_confirmation" class="block text-sm font-medium text-slate-700 mb-1">Konfirmasi Password</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <span class="material-symbols-outlined text-slate-400 text-sm">lock_reset</span>
+                    </div>
+                    <input type="password" id="password_confirmation" name="password_confirmation" required autocomplete="new-password" 
+                        class="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-xl bg-white/50 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:bg-white transition-colors text-slate-800 placeholder-slate-400" placeholder="••••••••">
+                </div>
+                <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2 text-sm text-red-600" />
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-md text-sm font-semibold text-white bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 mt-6">
+                Daftar
+            </button>
+        </form>
+
+        <!-- Login Link -->
+        <p class="mt-6 text-center text-sm text-slate-500">
+            Sudah punya akun? 
+            <a href="{{ route('login') }}" class="font-semibold text-indigo-600 hover:text-indigo-500 transition-colors">Masuk di sini</a>
+        </p>
+    </div>
 @endsection

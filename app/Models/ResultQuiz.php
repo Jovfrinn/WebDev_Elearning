@@ -14,7 +14,6 @@ class ResultQuiz extends Model
         'totalQuestion',
         'correctAnswers',
         'score',
-        'score',
         'questions',
         'resultAnswers',
     ];

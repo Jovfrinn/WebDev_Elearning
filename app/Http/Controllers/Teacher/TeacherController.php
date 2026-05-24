@@ -110,26 +110,32 @@ class TeacherController extends Controller
      */
     public function storeVideo(Request $request)
     {
-        $request->validate([
-            'file' => 'required|file|mimes:mp4,avi,mkv,webm|max:512000', // Maximum 500MB
-        ]);
+        // Validate by extension instead of MIME type to avoid false rejections
+        $allowedExtensions = ['mp4', 'avi', 'mkv', 'webm', 'mov'];
 
-        if ($request->hasFile('file')) {
-            $file = $request->file('file');
-            $fileName = time() . '_' . $file->getClientOriginalName();
-
-            $file->move(public_path('assets/video'), $fileName);
-
-            $subMaterial = new SubMaterial();
-            $subMaterial->file_material = $fileName;
-            $subMaterial->save();
-
-            session()->push('id_subMaterial', $subMaterial->id);
-
-            return response()->json(['success' => true, 'file' => $fileName]);
+        if (!$request->hasFile('file')) {
+            return response()->json(['success' => false, 'message' => 'Tidak ada file yang diunggah.'], 400);
         }
 
-        return response()->json(['success' => false], 400);
+        $file = $request->file('file');
+        $extension = strtolower($file->getClientOriginalExtension());
+
+        if (!in_array($extension, $allowedExtensions)) {
+            return response()->json(['success' => false, 'message' => 'Format file tidak didukung. Gunakan MP4, AVI, MKV, WEBM, atau MOV.'], 422);
+        }
+
+        // Max 1GB (1048576 KB)
+        if ($file->getSize() > 1048576 * 1024) {
+            return response()->json(['success' => false, 'message' => 'Ukuran file melebihi 1GB.'], 422);
+        }
+
+        $fileName = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('assets/video'), $fileName);
+
+        // Simpan nama file ke session (jangan buat row DB dulu karena field title tidak boleh null)
+        session(['uploaded_video' => $fileName]);
+
+        return response()->json(['success' => true, 'file' => $fileName]);
     }
 
     /**
@@ -142,22 +148,28 @@ class TeacherController extends Controller
     {
         $idMaterial = $request->idMaterial;
 
-        if (session()->has('id_subMaterial')) {
-            $id_subMateri = session()->get('id_subMaterial');
-            session()->forget('id_subMaterial');
-
-            SubMaterial::where('id', $id_subMateri)->update([
-                'id_material' => $idMaterial,
-                'title' => $request->title,
-                'description' => $request->description,
-            ]);
-        } else {
-            SubMaterial::create([
-                'id_material' => $idMaterial,
-                'title' => $request->title,
-                'description' => $request->description,
-            ]);
+        // Handle PDF upload
+        $pdfFileName = null;
+        if ($request->hasFile('file_pdf')) {
+            $pdf = $request->file('file_pdf');
+            $pdfFileName = 'pdf_' . time() . '_' . $pdf->getClientOriginalName();
+            $pdf->move(public_path('assets/pdf'), $pdfFileName);
         }
+
+        // Ambil nama file video dari session jika ada
+        $videoFileName = null;
+        if (session()->has('uploaded_video')) {
+            $videoFileName = session()->get('uploaded_video');
+            session()->forget('uploaded_video'); // Hapus dari session setelah diambil
+        }
+
+        SubMaterial::create([
+            'id_material' => $idMaterial,
+            'title' => $request->title,
+            'description' => $request->description,
+            'file_material' => $videoFileName, // Bisa null jika tidak ada video
+            'file_pdf' => $pdfFileName,
+        ]);
 
         return redirect()->route('get.subMateri', $idMaterial);
     }

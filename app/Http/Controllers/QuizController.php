@@ -35,6 +35,7 @@ class QuizController extends Controller
                 ? round(($correctAnswers / $totalQuestions) * 100, 2) 
                 : 0;
 
+
             $resultQuiz = ResultQuiz::create([
                 'id_material' => $id_material[0],
                 'id_user' => $idUser->id,
@@ -56,6 +57,7 @@ class QuizController extends Controller
     
         // Hapus session yang tidak diperlukan
         session()->forget('quiz.questions');
+        session()->forget('quiz.questionn');
         session()->forget('quiz.current');
         session()->forget('quiz.answers');
         session()->forget('idMaterial');
@@ -170,20 +172,22 @@ class QuizController extends Controller
     }
 
     public function resultQuiz($id){
-        $result = resultQuiz::findOrFail($id);
+        $result = ResultQuiz::findOrFail($id);
         $idMaterial = $result->id_material;
         $totalQuestions = $result->totalQuestion;
         $correctAnswers = $result->correctAnswers;
         $answers = $result->resultAnswers;
         $id_answer = [];
-        
+
         foreach($answers as $answer){
             $id_answer[] = $answer['id'];
         }
         $answerData = Answer::whereIn('id', $id_answer)->with('question')->get();
         $data['answerData'] = $answerData;
+        $data['answers'] = $answers;
         $data['totalQuestions'] = $totalQuestions;
         $data['correctAnswers'] = $correctAnswers;
+        $data['score'] = $result->score;
         $data['idMaterial'] = $idMaterial;
         return view('user.result', $data);
     }

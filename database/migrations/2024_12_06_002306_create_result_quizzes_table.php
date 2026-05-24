@@ -18,6 +18,9 @@ return new class extends Migration
             $table->integer('totalQuestion')->nullable();
             $table->integer('correctAnswers')->nullable();
             $table->integer('score')->nullable();
+            $table->text('questions')->nullable();
+            $table->text('resultAnswers')->nullable();
+            $table->text('status')->nullable();
             $table->timestamps();
         });
     }

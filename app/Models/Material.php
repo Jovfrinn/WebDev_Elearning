@@ -15,9 +15,9 @@ class Material extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'material_users')
+        return $this->belongsToMany(User::class, 'material_users', 'id_material', 'id_user')
             ->withTimestamps()
-                ->withPivot('joined_at');
+            ->withPivot('joined_at');
     }
 
     public function userTeacher()

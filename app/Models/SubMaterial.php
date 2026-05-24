@@ -11,5 +11,6 @@ class SubMaterial extends Model
         'title',
         'description',
         'file_material',
+        'file_pdf',
     ];
 }

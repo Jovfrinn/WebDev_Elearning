@@ -1,70 +1,84 @@
 @extends('teacher.layouts.headers') 
 
+@section('pageTitle', 'Buat Kuis Baru')
+
 @section('teacherContent')  
-<div class="container">
-    <h1 class="mt-4">Create New Quiz</h1>
-    <hr>
+<div class="max-w-5xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+            <h2 class="text-2xl font-bold text-slate-800 tracking-tight">Buat Kuis Baru</h2>
+            <p class="text-sm text-slate-500 mt-1">Tambahkan pertanyaan dan pilihan jawaban untuk mengevaluasi peserta.</p>
+        </div>
+        <a href="{{ route('get.subMateri', $idMaterial) }}" class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors tooltip" title="Kembali">
+            <span class="material-symbols-outlined">arrow_back</span>
+        </a>
+    </div>
+
+    <!-- Main Form -->
     <form id="quizForm" action="{{route('store.quiz')}}" method="POST">
         @csrf
-        
         <input type="hidden" name="idMaterial" value="{{$idMaterial}}">
 
-        <div id="questionsContainer">
-            <div class="question-section" data-question-index="0">
-                <h3>Pertanyaan 1</h3>
-                <div class="form-group">
-                    <label>Pertanyaan</label>
-                    <input type="text" class="form-control" name="questions[]" required placeholder="Pertanyaan">
+        <div id="questionsContainer" class="space-y-6">
+            <!-- Initial Question Section -->
+            <div class="question-section bg-white rounded-2xl shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-slate-100 p-6 sm:p-8" data-question-index="0">
+                <div class="flex items-center justify-between mb-6 border-b border-slate-100 pb-4">
+                    <h3 class="text-lg font-bold text-slate-800 flex items-center">
+                        <span class="bg-emerald-100 text-emerald-600 rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm">1</span>
+                        Pertanyaan
+                    </h3>
                 </div>
 
-                <div class="answers-container">
-                    <div class="answer-group">
-                        <div class="form-group">
-                            <label>Jawaban 1</label>
-                            <div class="input-group d-flex align-items-center">
-                                <div class="input-group-append">
-                                    <div class="input-group-text">
-                                        <input type="radio" name="correct_answers[0][]" value="0">
-                                        <small class="ml-1 ms-1">Jawaban Benar</small>
-                                    </div>
-                                </div>
-                                <input type="text" class="form-control" name="answers[0][]" required placeholder="Jawaban 1">
+                <div class="mb-6">
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Teks Pertanyaan</label>
+                    <input type="text" name="questions[]" required placeholder="Tuliskan pertanyaan di sini..."
+                        class="block w-full px-4 py-3 border border-slate-200 rounded-xl bg-slate-50 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors text-slate-800 placeholder-slate-400">
+                </div>
+
+                <div class="answers-container space-y-4">
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Pilihan Jawaban</label>
+                    <div class="answer-group space-y-3">
+                        <!-- Answer 1 -->
+                        <div class="form-group flex items-center gap-3">
+                            <div class="flex-shrink-0 flex items-center justify-center w-12 h-12 bg-slate-50 border border-slate-200 rounded-xl">
+                                <input type="radio" name="correct_answers[0][]" value="0" class="w-5 h-5 text-emerald-600 focus:ring-emerald-500 border-slate-300 tooltip" title="Tandai sebagai jawaban benar">
                             </div>
+                            <input type="text" name="answers[0][]" required placeholder="Pilihan jawaban 1"
+                                class="flex-1 block w-full px-4 py-3 border border-slate-200 rounded-xl bg-slate-50 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors text-slate-800">
                         </div>
-                        <div class="form-group">
-                            <label>Jawaban 2</label>
-                            <div class="input-group d-flex align-items-center">
-                                <div class="input-group-append">
-                                    <div class="input-group-text">
-                                        <input type="radio" name="correct_answers[0][]" value="0">
-                                        <small class="ml-1 ms-1">Jawaban Benar</small>
-                                    </div>
-                                </div>
-                                <input type="text" class="form-control" name="answers[0][]" required placeholder="Jawaban 2">
+                        
+                        <!-- Answer 2 -->
+                        <div class="form-group flex items-center gap-3">
+                            <div class="flex-shrink-0 flex items-center justify-center w-12 h-12 bg-slate-50 border border-slate-200 rounded-xl">
+                                <input type="radio" name="correct_answers[0][]" value="0" class="w-5 h-5 text-emerald-600 focus:ring-emerald-500 border-slate-300 tooltip" title="Tandai sebagai jawaban benar">
                             </div>
+                            <input type="text" name="answers[0][]" required placeholder="Pilihan jawaban 2"
+                                class="flex-1 block w-full px-4 py-3 border border-slate-200 rounded-xl bg-slate-50 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors text-slate-800">
                         </div>
                     </div>
                 </div>
 
-                <button type="button" class="btn add-answer-btn mt-4">
-                    <span class="material-symbols-outlined">
-                    add
-                    </span>
-                    Tambah Jawaban</button>
+                <div class="mt-6 pt-4 border-t border-slate-50">
+                    <button type="button" class="add-answer-btn inline-flex items-center px-4 py-2 text-sm font-medium text-emerald-600 bg-emerald-50 hover:bg-emerald-100 rounded-lg transition-colors">
+                        <span class="material-symbols-outlined text-[18px] mr-1 pointer-events-none">add</span>
+                        Tambah Pilihan Jawaban
+                    </button>
+                </div>
             </div>
         </div>
 
-        <div class="mt-3 d-flex justify-content-between">
-            <button type="button" id="addQuestionBtn" class="btn btn-add-question">
-                <span class="material-symbols-outlined">
-                    add
-                    </span>
-                Tambah Pertanyaan</button>
-            <button type="submit" class="btn btn-save">
-                <span class="material-symbols-outlined me-2">
-                    save
-                    </span>
-                Save Quiz</button>
+        <!-- Global Actions -->
+        <div class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <button type="button" id="addQuestionBtn" class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 border border-slate-200 bg-white text-slate-700 font-medium rounded-xl hover:bg-slate-50 hover:text-slate-900 transition-colors shadow-sm">
+                <span class="material-symbols-outlined mr-2">add_box</span>
+                Tambah Pertanyaan Baru
+            </button>
+            
+            <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3 bg-emerald-600 text-white font-medium rounded-xl hover:bg-emerald-700 transition-colors shadow-md shadow-emerald-200">
+                <span class="material-symbols-outlined mr-2">save</span>
+                Simpan Kuis
+            </button>
         </div>
     </form>
 </div>
@@ -84,277 +98,84 @@
         });
     
         questionsContainer.addEventListener('click', function(e) {
-            if (e.target.classList.contains('add-answer-btn')) {
-                const questionSection = e.target.closest('.question-section');
+            // Match button or its child icon
+            if (e.target.classList.contains('add-answer-btn') || e.target.parentElement.classList.contains('add-answer-btn')) {
+                const btn = e.target.classList.contains('add-answer-btn') ? e.target : e.target.parentElement;
+                const questionSection = btn.closest('.question-section');
                 const answersContainer = questionSection.querySelector('.answers-container');
                 const currentAnswerCount = answersContainer.querySelectorAll('.answer-group > .form-group').length;
+                
                 const newAnswerGroup = createAnswerInput(
                     questionSection.dataset.questionIndex, 
                     currentAnswerCount + 1
                 );
+                
                 answersContainer.querySelector('.answer-group').appendChild(newAnswerGroup);
             }
         });
     
         function createQuestionSection(index) {
             const questionSection = document.createElement('div');
-            questionSection.classList.add('question-section');
+            questionSection.classList.add('question-section', 'bg-white', 'rounded-2xl', 'shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)]', 'border', 'border-slate-100', 'p-6', 'sm:p-8', 'mt-6');
             questionSection.dataset.questionIndex = index;
+            
             questionSection.innerHTML = `
-                <h3>Pertanyaan ${index + 1}</h3>
-                <div class="form-group">
-                    <label>Pertanyaan</label>
-                    <input type="text" class="form-control" name="questions[]" required placeholder="Pertanyaan">
+                <div class="flex items-center justify-between mb-6 border-b border-slate-100 pb-4">
+                    <h3 class="text-lg font-bold text-slate-800 flex items-center">
+                        <span class="bg-emerald-100 text-emerald-600 rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm">${index + 1}</span>
+                        Pertanyaan
+                    </h3>
                 </div>
 
-                <div class="answers-container">
-                    <div class="answer-group">
-                        <div class="form-group">
-                            <label>Jawaban 1</label>
-                            <div class="input-group d-flex align-items-center">
-                                <div class="input-group-append">
-                                    <div class="input-group-text">
-                                        <input type="radio" name="correct_answers[${index}][]" value="0">
-                                        <small class="ml-1 ms-1">Jawaban Benar</small>
-                                    </div>
-                                </div>
-                                <input type="text" class="form-control" name="answers[${index}][]" required placeholder="Jawaban 1">
+                <div class="mb-6">
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Teks Pertanyaan</label>
+                    <input type="text" name="questions[]" required placeholder="Tuliskan pertanyaan di sini..."
+                        class="block w-full px-4 py-3 border border-slate-200 rounded-xl bg-slate-50 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors text-slate-800 placeholder-slate-400">
+                </div>
+
+                <div class="answers-container space-y-4">
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Pilihan Jawaban</label>
+                    <div class="answer-group space-y-3">
+                        <div class="form-group flex items-center gap-3">
+                            <div class="flex-shrink-0 flex items-center justify-center w-12 h-12 bg-slate-50 border border-slate-200 rounded-xl">
+                                <input type="radio" name="correct_answers[${index}][]" value="0" class="w-5 h-5 text-emerald-600 focus:ring-emerald-500 border-slate-300 tooltip" title="Tandai sebagai jawaban benar">
                             </div>
+                            <input type="text" name="answers[${index}][]" required placeholder="Pilihan jawaban 1"
+                                class="flex-1 block w-full px-4 py-3 border border-slate-200 rounded-xl bg-slate-50 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors text-slate-800">
                         </div>
-                        <div class="form-group">
-                            <label>Jawaban 2</label>
-                            <div class="input-group d-flex align-items-center">
-                                <div class="input-group-append">
-                                    <div class="input-group-text">
-                                        <input type="radio" name="correct_answers[${index}][]" value="0">
-                                        <small class="ml-1 ms-1">Jawaban Benar</small>
-                                    </div>
-                                </div>
-                                <input type="text" class="form-control" name="answers[${index}][]" required placeholder="Jawaban 2">
+                        <div class="form-group flex items-center gap-3">
+                            <div class="flex-shrink-0 flex items-center justify-center w-12 h-12 bg-slate-50 border border-slate-200 rounded-xl">
+                                <input type="radio" name="correct_answers[${index}][]" value="1" class="w-5 h-5 text-emerald-600 focus:ring-emerald-500 border-slate-300 tooltip" title="Tandai sebagai jawaban benar">
                             </div>
+                            <input type="text" name="answers[${index}][]" required placeholder="Pilihan jawaban 2"
+                                class="flex-1 block w-full px-4 py-3 border border-slate-200 rounded-xl bg-slate-50 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors text-slate-800">
                         </div>
                     </div>
                 </div>
 
-                <button type="button" class="btn add-answer-btn mt-4">
-                    <span class="material-symbols-outlined">
-                    add
-                    </span>
-                    Tambah Jawaban</button>
+                <div class="mt-6 pt-4 border-t border-slate-50">
+                    <button type="button" class="add-answer-btn inline-flex items-center px-4 py-2 text-sm font-medium text-emerald-600 bg-emerald-50 hover:bg-emerald-100 rounded-lg transition-colors">
+                        <span class="material-symbols-outlined text-[18px] mr-1 pointer-events-none">add</span>
+                        Tambah Pilihan Jawaban
+                    </button>
+                </div>
             `;
             return questionSection;
         }
     
         function createAnswerInput(questionIndex, answerIndex) {
             const answerGroup = document.createElement('div');
-            answerGroup.classList.add('form-group');
+            answerGroup.classList.add('form-group', 'flex', 'items-center', 'gap-3');
+            
             answerGroup.innerHTML = `
-                <label>Answer ${answerIndex}</label>
-                <div class="input-group d-flex align-items-center">
-                                <div class="input-group-append">
-                                    <div class="input-group-text">
-                                        <input type="radio" name="correct_answers[${questionIndex}][]" value="${answerIndex - 1}">
-                                        <small class="ml-1 ms-1">Jawaban Benar</small>
-                                    </div>
-                                </div>
-                                <input type="text" class="form-control" name="answers[${questionIndex}][]" required placeholder="Jawaban ${answerIndex}">
-                            </div>
+                <div class="flex-shrink-0 flex items-center justify-center w-12 h-12 bg-slate-50 border border-slate-200 rounded-xl">
+                    <input type="radio" name="correct_answers[${questionIndex}][]" value="${answerIndex - 1}" class="w-5 h-5 text-emerald-600 focus:ring-emerald-500 border-slate-300 tooltip" title="Tandai sebagai jawaban benar">
+                </div>
+                <input type="text" name="answers[${questionIndex}][]" required placeholder="Pilihan jawaban ${answerIndex}"
+                    class="flex-1 block w-full px-4 py-3 border border-slate-200 rounded-xl bg-slate-50 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors text-slate-800">
             `;
             return answerGroup;
         }
     });
-    </script>
+</script>
 @endsection
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{{-- <!doctype html>
-
-
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-</head>
-  <body>
-    
-    <div class="container">
-        <h1>Create New Quiz</h1>
-        
-        <form id="quizForm" action="{{route('store.quiz')}}" method="POST">
-            @csrf
-            
-            <input type="hidden" name="idMaterial" value="{{$idMaterial}}">
-    
-            <div id="questionsContainer">
-                <div class="question-section" data-question-index="0">
-                    <h3>Question 1</h3>
-                    <div class="form-group">
-                        <label>Question Text</label>
-                        <input type="text" class="form-control" name="questions[]" required>
-                    </div>
-    
-                    <div class="answers-container">
-                        <div class="answer-group">
-                            <div class="form-group">
-                                <label>Answer 1</label>
-                                <div class="input-group">
-                                    <div class="input-group-append">
-                                        <div class="input-group-text">
-                                            <input type="radio" name="correct_answers[0][]" value="0">
-                                            {{-- <small class="ml-1">Correct</small> --}}
-                                        {{-- </div>
-                                    </div>
-                                    <input type="text" class="form-control" name="answers[0][]" required>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Answer 2</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" name="answers[0][]" required>
-                                    <div class="input-group-append">
-                                        <div class="input-group-text">
-                                            <input type="radio" name="correct_answers[0][]" value="1">
-                                            <small class="ml-1">Correct</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-    
-                    <button type="button" class="btn btn-secondary add-answer-btn">Add Answer</button>
-                </div>
-            </div>
-    
-            <div class="mt-3">
-                <button type="button" id="addQuestionBtn" class="btn btn-primary">Add Question</button>
-                <button type="submit" class="btn btn-success">Save Quiz</button>
-            </div>
-        </form>
-    </div>
-
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            let questionIndex = 0;
-            const questionsContainer = document.getElementById('questionsContainer');
-            const addQuestionBtn = document.getElementById('addQuestionBtn');
-        
-            addQuestionBtn.addEventListener('click', function() {
-                questionIndex++;
-                const newQuestionSection = createQuestionSection(questionIndex);
-                questionsContainer.appendChild(newQuestionSection);
-            });
-        
-            questionsContainer.addEventListener('click', function(e) {
-                if (e.target.classList.contains('add-answer-btn')) {
-                    const questionSection = e.target.closest('.question-section');
-                    const answersContainer = questionSection.querySelector('.answers-container');
-                    const currentAnswerCount = answersContainer.querySelectorAll('.answer-group > .form-group').length;
-                    const newAnswerGroup = createAnswerInput(
-                        questionSection.dataset.questionIndex, 
-                        currentAnswerCount + 1
-                    );
-                    answersContainer.querySelector('.answer-group').appendChild(newAnswerGroup);
-                }
-            });
-        
-            function createQuestionSection(index) {
-                const questionSection = document.createElement('div');
-                questionSection.classList.add('question-section');
-                questionSection.dataset.questionIndex = index;
-                questionSection.innerHTML = `
-                    <h3>Question ${index + 1}</h3>
-                    <div class="form-group">
-                        <label>Question Text</label>
-                        <input type="text" class="form-control" name="questions[]" required>
-                    </div>
-                    <div class="answers-container">
-                        <div class="answer-group">
-                            <div class="form-group">
-                                <label>Answer 1</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" name="answers[${index}][]" required>
-                                    <div class="input-group-append">
-                                        <div class="input-group-text">
-                                            <input type="radio" name="correct_answers[${index}][]" value="0">
-                                            <small class="ml-1">Correct</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Answer 2</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" name="answers[${index}][]" required>
-                                    <div class="input-group-append">
-                                        <div class="input-group-text">
-                                            <input type="radio" name="correct_answers[${index}][]" value="1">
-                                            <small class="ml-1">Correct</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <button type="button" class="btn btn-secondary add-answer-btn">Add Answer</button>
-                `;
-                return questionSection;
-            }
-        
-            function createAnswerInput(questionIndex, answerIndex) {
-                const answerGroup = document.createElement('div');
-                answerGroup.classList.add('form-group');
-                answerGroup.innerHTML = `
-                    <label>Answer ${answerIndex}</label>
-                    <div class="input-group">
-                        <input type="text" class="form-control" name="answers[${questionIndex}][]" required>
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <input type="radio" name="correct_answers[${questionIndex}][]" value="${answerIndex - 1}">
-                                <small class="ml-1">Correct</small>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                return answerGroup;
-            }
-        });
-        </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-  </body>
-</html> --}}

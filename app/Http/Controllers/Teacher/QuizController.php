@@ -51,18 +51,28 @@ class QuizController extends Controller
         //     // Add any other material-related fields
         // ]);
 
+        $questions = $request->input('questions', []);
+        $answers = $request->input('answers', []);
+        $correctAnswers = $request->input('correct_answers', []);
+        $idMaterial = $request->input('idMaterial');
+
         // Loop through questions and store them
-        foreach ($request->questions as $questionIndex => $questionText) {
+        foreach ($questions as $questionIndex => $questionText) {
             // Create question
             $question = Question::create([
-                'id_material' => $request->idMaterial,
+                'id_material' => $idMaterial,
                 'question' => $questionText
             ]);
             
-            
-            foreach ($request->answers[$questionIndex] as $answerIndex => $answerText) {
-                $isCorrect = in_array($answerIndex, $request->correct_answers[$questionIndex]);
-                $answer = Answer::create([
+            $questionAnswers = $answers[$questionIndex] ?? [];
+            foreach ($questionAnswers as $answerIndex => $answerText) {
+                $questionCorrectAnswers = $correctAnswers[$questionIndex] ?? [];
+                
+                // Ensure it is handled as array to prevent PHP 8+ in_array TypeError
+                $correctArray = is_array($questionCorrectAnswers) ? $questionCorrectAnswers : [$questionCorrectAnswers];
+                $isCorrect = in_array($answerIndex, $correctArray);
+                
+                Answer::create([
                     'id_question' => $question->id,
                     'choices' => $answerText,
                     'correctAnswer' => $isCorrect
@@ -70,7 +80,7 @@ class QuizController extends Controller
             }
         }
         
-        return redirect()->route('get.subMateri',$request->idMaterial)->with('success', 'Quiz created successfully');
+        return redirect()->route('get.subMateri', $idMaterial)->with('success', 'Quiz created successfully');
     }
     
 

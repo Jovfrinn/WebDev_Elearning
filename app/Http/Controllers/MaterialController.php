@@ -16,19 +16,13 @@ class MaterialController extends Controller
 
     public function index()
     {
-        $materi = Material::all();
+        $data = [];
 
-        $data["material"] = $materi;
-
-        if( auth()->check()){
-
-        $userId = auth()->id();
-
-        $idMateri = MaterialUser::where('id_user', $userId)->pluck('id_material');
-
-        $materialUser = Material::whereIn('id', $idMateri)->with('userTeacher')->get();
-        $data["materialUser"] = $materialUser;
-
+        if (auth()->check()) {
+            $userId = auth()->id();
+            $idMateri = MaterialUser::where('id_user', $userId)->pluck('id_material');
+            $materialUser = Material::whereIn('id', $idMateri)->with('userTeacher')->paginate(9);
+            $data['materialUser'] = $materialUser;
         }
 
         return view('user.home', $data);
@@ -36,9 +30,9 @@ class MaterialController extends Controller
  
     public function allMateri()
     {
-        $materi = Material::all();
+        $materi = Material::with('userTeacher')->get();
 
-        $data["material"] = $materi;
+        $data['material'] = $materi;
 
         return view('user.allMateri', $data);
     }
