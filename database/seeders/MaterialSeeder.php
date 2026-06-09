@@ -17,12 +17,19 @@ class MaterialSeeder extends Seeder
             [
                 "material_title" => "Apa itu AI",
                 "material_image" => "AI.jpg",
-                "description" => "AI adalah sebuah teknologi yang bisa berpikir sendiri dan bisa membantu manusia"
+                "description" => "AI adalah sebuah teknologi yang bisa berpikir sendiri dan bisa membantu manusia",
+                "id_teacher" => 2,
+                "created_at" => now(),
+                "updated_at" => now()
+
             ],
             [
                 "material_title" => "Apa itu HTML",
                 "material_image" => "HTML.jpg",
-                "description" => "HTML adalah sebuah markup language untuk membuat kerangka website"
+                "description" => "HTML adalah sebuah markup language untuk membuat kerangka website",
+                "id_teacher" => 2,
+                "created_at" => now(),
+                "updated_at" => now()
             ],
             
         ];

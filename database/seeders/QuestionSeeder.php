@@ -14,34 +14,35 @@ class QuestionSeeder extends Seeder
     public function run(): void
     {
         $array = [
+            // Materi 1: AI
             [
-                "question" => "Anda sedang merancang sebuah aplikasi mobile untuk membantu pelajar SMK belajar pemrograman. Aplikasi ini ???",
+                "question" => "Apa kepanjangan dari singkatan AI?",
                 "id_material" => 1
             ],
             [
-                "question" => "blah blahh loremm dfjaddfajdskf sdfkjadskfjd jdsfkadsjf ???",
-                "id_material" => 1
-
-            ],
-            [
-                "question" => "lorem ipsum dolor ahfihadsfkdhf dakfhdskfhadksjf kdjdfkjsddf sdfhkdasjf???",
+                "question" => "Manakah di bawah ini yang merupakan contoh penerapan AI dalam kehidupan sehari-hari?",
                 "id_material" => 1
             ],
             [
-                "question" => "Anda sedang merancang sebuah aplikasi mobile untuk membantu pelajar SMK belajar pemrograman. Aplikasi ini ???",
+                "question" => "Apa tujuan utama dari pengembangan Artificial Intelligence?",
+                "id_material" => 1
+            ],
+            
+            // Materi 2: HTML
+            [
+                "question" => "Apa kepanjangan dari HTML?",
                 "id_material" => 2
             ],
             [
-                "question" => "blah blahh loremm dfjaddfajdskf sdfkjadskfjd jdsfkadsjf ???",
+                "question" => "Tag apa yang digunakan untuk membuat sebuah paragraf dalam HTML?",
                 "id_material" => 2
-
             ],
             [
-                "question" => "lorem ipsum dolor ahfihadsfkdhf dakfhdskfhadksjf kdjdfkjsddf sdfhkdasjf???",
+                "question" => "Manakah tag HTML di bawah ini yang benar digunakan untuk menyisipkan sebuah gambar?",
                 "id_material" => 2
             ],
-            ];
+        ];
 
-    DB::table('questions')->insert($array);
+        DB::table('questions')->insert($array);
     }
 }

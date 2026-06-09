@@ -61,7 +61,13 @@
                 </div>
                 
                 <div class="flex items-center sm:justify-end gap-2 pl-16 sm:pl-0">
-                    <a href="{{route('delete.subMateri', $materi->id)}}" onclick="return confirm('Apakah Anda yakin ingin menghapus materi ini?')" class="px-4 py-2 border border-red-200 text-red-600 text-sm font-medium rounded-lg hover:bg-red-50 hover:border-red-300 transition-colors flex items-center">
+                    @if($materi->file_pdf)
+                    <a href="{{ asset('assets/pdf/' . $materi->file_pdf) }}" target="_blank" class="px-4 py-2 bg-white border border-red-200 text-red-600 text-sm font-medium rounded-lg hover:bg-red-50 transition-colors flex items-center">
+                        <span class="material-symbols-outlined text-[18px] mr-1">picture_as_pdf</span>
+                        Lihat PDF
+                    </a>
+                    @endif
+                    <a href="{{route('delete.subMateri', $materi->id)}}" onclick="return confirm('Apakah Anda yakin ingin menghapus materi ini?')" class="px-4 py-2 bg-white border border-slate-200 text-red-600 text-sm font-medium rounded-lg hover:bg-red-50 hover:border-red-300 transition-colors flex items-center">
                         <span class="material-symbols-outlined text-[18px] mr-1">delete</span>
                         Hapus
                     </a>

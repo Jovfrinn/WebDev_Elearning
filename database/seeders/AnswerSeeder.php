@@ -14,128 +14,139 @@ class AnswerSeeder extends Seeder
     public function run(): void
     {
         $array = [
+            // Question 1 (AI): Apa kepanjangan dari singkatan AI?
             [
                 "id_question" => 1,
-                "choices" => "jawaban a",
+                "choices" => "Artificial Intelligence",
                 "correctAnswer" => 1,
             ],
             [
                 "id_question" => 1,
-                "choices" => "jawaban b",
-                "correctAnswer" => 0,
-            ],
-            [
-                "id_question" => 1,
-                "choices" => "jawaban c",
+                "choices" => "Automated Integration",
                 "correctAnswer" => 0,
             ],
             [
                 "id_question" => 1,
-                "choices" => "jawaban d",
+                "choices" => "Advanced Information",
+                "correctAnswer" => 0,
+            ],
+            [
+                "id_question" => 1,
+                "choices" => "Artistic Illusion",
+                "correctAnswer" => 0,
+            ],
+            
+            // Question 2 (AI): Contoh penerapan AI?
+            [
+                "id_question" => 2,
+                "choices" => "Mesin ketik manual",
                 "correctAnswer" => 0,
             ],
             [
                 "id_question" => 2,
-                "choices" => "jawaban a",
-                "correctAnswer" => 0,
-            ],
-            [
-                "id_question" => 2,
-                "choices" => "jawaban b",
+                "choices" => "Asisten virtual (seperti Siri atau Google Assistant)",
                 "correctAnswer" => 1,
             ],
             [
                 "id_question" => 2,
-                "choices" => "jawaban c",
+                "choices" => "Kipas angin tradisional",
                 "correctAnswer" => 0,
             ],
             [
                 "id_question" => 2,
-                "choices" => "jawaban d",
+                "choices" => "Buku cetak",
+                "correctAnswer" => 0,
+            ],
+            
+            // Question 3 (AI): Tujuan utama AI?
+            [
+                "id_question" => 3,
+                "choices" => "Membuat komputer menjadi lebih berat",
                 "correctAnswer" => 0,
             ],
             [
                 "id_question" => 3,
-                "choices" => "jawaban a",
+                "choices" => "Menghapus semua pekerjaan manusia di bumi",
                 "correctAnswer" => 0,
             ],
             [
                 "id_question" => 3,
-                "choices" => "jawaban b",
-                "correctAnswer" => 0,
+                "choices" => "Membuat komputer mampu meniru kemampuan kognitif manusia",
+                "correctAnswer" => 1,
             ],
             [
                 "id_question" => 3,
-                "choices" => "jawaban c",
+                "choices" => "Menghasilkan lebih banyak polusi udara",
                 "correctAnswer" => 0,
             ],
+            
+            // Question 4 (HTML): Apa kepanjangan HTML?
             [
-                "id_question" => 3,
-                "choices" => "jawaban d",
+                "id_question" => 4,
+                "choices" => "Hyper Text Markup Language",
                 "correctAnswer" => 1,
             ],
             [
                 "id_question" => 4,
-                "choices" => "jawaban a",
+                "choices" => "High Tech Modern Language",
                 "correctAnswer" => 0,
             ],
             [
                 "id_question" => 4,
-                "choices" => "jawaban b",
+                "choices" => "Hyperlinks and Text Markup Language",
                 "correctAnswer" => 0,
             ],
             [
                 "id_question" => 4,
-                "choices" => "jawaban c",
+                "choices" => "Home Tool Markup Language",
+                "correctAnswer" => 0,
+            ],
+            
+            // Question 5 (HTML): Tag untuk paragraf?
+            [
+                "id_question" => 5,
+                "choices" => "<paragraph>",
+                "correctAnswer" => 0,
+            ],
+            [
+                "id_question" => 5,
+                "choices" => "<pg>",
+                "correctAnswer" => 0,
+            ],
+            [
+                "id_question" => 5,
+                "choices" => "<p>",
                 "correctAnswer" => 1,
             ],
             [
-                "id_question" => 4,
-                "choices" => "jawaban d",
+                "id_question" => 5,
+                "choices" => "<text>",
                 "correctAnswer" => 0,
             ],
+            
+            // Question 6 (HTML): Tag untuk gambar?
             [
-                "id_question" => 5,
-                "choices" => "oke gas oke gas oke gas oke gasss",
-                "correctAnswer" => 1,
-            ],
-            [
-                "id_question" => 5,
-                "choices" => "mang eak mang eak mang eak mang eak",
-                "correctAnswer" => 0,
-            ],
-            [
-                "id_question" => 5,
-                "choices" => "apaan tuhh appann tuh apaan tuh apaan tuh",
-                "correctAnswer" => 0,
-            ],
-            [
-                "id_question" => 5,
-                "choices" => "hayuuk hayuuk hayukkkjk hayukkkkk hayukkkkkkkkkkkkkkk",
+                "id_question" => 6,
+                "choices" => "<image src='url' />",
                 "correctAnswer" => 0,
             ],
             [
                 "id_question" => 6,
-                "choices" => "ashiipppp siapodhfoadsf",
-                "correctAnswer" => 0,
-            ],
-            [
-                "id_question" => 6,
-                "choices" => "mang wokwokw wowokwowkw owkwowko mang ",
-                "correctAnswer" => 0,
-            ],
-            [
-                "id_question" => 6,
-                "choices" => "apaan tuhh appann tuh shnfjdhf jdhfkjadsfh",
+                "choices" => "<img src='url' alt='text'>",
                 "correctAnswer" => 1,
             ],
             [
                 "id_question" => 6,
-                "choices" => "hayuuk hayuuk hayukkkjk jhzdfkjhadfj",
+                "choices" => "<picture href='url'>",
                 "correctAnswer" => 0,
             ],
-    ];
+            [
+                "id_question" => 6,
+                "choices" => "<pic source='url'>",
+                "correctAnswer" => 0,
+            ],
+        ];
 
-    FacadesDB::table('answers')->insert($array);
+        FacadesDB::table('answers')->insert($array);
     }
 }

@@ -10,7 +10,8 @@ use App\Models\SubMaterial;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 class TeacherController extends Controller
 {
     /**
@@ -148,30 +149,58 @@ class TeacherController extends Controller
     {
         $idMaterial = $request->idMaterial;
 
-        // Handle PDF upload
-        $pdfFileName = null;
-        if ($request->hasFile('file_pdf')) {
-            $pdf = $request->file('file_pdf');
-            $pdfFileName = 'pdf_' . time() . '_' . $pdf->getClientOriginalName();
-            $pdf->move(public_path('assets/pdf'), $pdfFileName);
+        DB::beginTransaction();
+        try {
+            // Handle PDF upload
+            $pdfFileName = null;
+            
+            // Cek jika file terkirim tapi tidak valid (biasanya karena melebihi upload_max_filesize PHP yaitu 2MB)
+            if ($request->has('file_pdf') && !$request->hasFile('file_pdf')) {
+                DB::rollBack();
+                return redirect()->back()->with('error', 'Gagal mengunggah PDF. Pastikan ukuran file tidak melebihi 2MB.');
+            }
+
+            if ($request->hasFile('file_pdf')) {
+                $pdf = $request->file('file_pdf');
+                $pdfFileName = 'pdf_' . time() . '_' . $pdf->getClientOriginalName();
+                $pdf->move(public_path('assets/pdf'), $pdfFileName);
+            }
+
+            // Ambil nama file video dari session jika ada
+            $videoFileName = null;
+            if (session()->has('uploaded_video')) {
+                $videoFileName = session()->get('uploaded_video');
+            }
+
+            SubMaterial::create([
+                'id_material' => $idMaterial,
+                'title' => $request->title,
+                'description' => $request->description,
+                'file_material' => $videoFileName, // Bisa null jika tidak ada video
+                'file_pdf' => $pdfFileName,
+            ]);
+
+            // Hapus dari session setelah sukses disimpan
+            if ($videoFileName) {
+                session()->forget('uploaded_video');
+            }
+
+            DB::commit();
+            return redirect()->route('get.subMateri', $idMaterial)->with('success', 'Sub materi berhasil ditambahkan');
+            
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Gagal menyimpan sub materi: ' . $e->getMessage());
+            
+            // Hapus file PDF yang sudah terupload jika DB gagal (rollback)
+            if ($pdfFileName && file_exists(public_path('assets/pdf/' . $pdfFileName))) {
+                unlink(public_path('assets/pdf/' . $pdfFileName));
+            }
+            
+            // (Catatan: File video tidak dihapus agar user tidak perlu re-upload jika submit ulang)
+            
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menambahkan materi. Silakan coba lagi.');
         }
-
-        // Ambil nama file video dari session jika ada
-        $videoFileName = null;
-        if (session()->has('uploaded_video')) {
-            $videoFileName = session()->get('uploaded_video');
-            session()->forget('uploaded_video'); // Hapus dari session setelah diambil
-        }
-
-        SubMaterial::create([
-            'id_material' => $idMaterial,
-            'title' => $request->title,
-            'description' => $request->description,
-            'file_material' => $videoFileName, // Bisa null jika tidak ada video
-            'file_pdf' => $pdfFileName,
-        ]);
-
-        return redirect()->route('get.subMateri', $idMaterial);
     }
 
     /**

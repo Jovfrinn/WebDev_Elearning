@@ -11,6 +11,8 @@ class Material extends Model
         'material_image',
         'description',
         'id_teacher',
+        'created_at',
+        'updated_at'
     ];
 
     public function users()
