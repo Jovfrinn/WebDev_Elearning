@@ -2,6 +2,8 @@
 
 Platform pembelajaran online berbasis web yang dibangun dengan Laravel 11. Mendukung tiga peran pengguna: **Siswa**, **Guru**, dan **Admin** — masing-masing dengan dashboard dan fitur tersendiri.
 
+**Live Demo:** https://webdevelearning-production.up.railway.app
+
 ---
 
 ## Fitur Utama
